@@ -10,7 +10,7 @@ public class BlackPiece extends CheckersPiece{
 	
 	@Override
 	public BlackPiece clone() {
-		return this;
+		return new BlackPiece();
 	}
 	
 	@Override

@@ -4,6 +4,8 @@ import java.awt.Image;
 
 abstract public class CheckersPiece implements Piece {
 	
+	int getal;
+	
 	private Image visual;
 	
 	public CheckersPiece() {
@@ -21,5 +23,6 @@ abstract public class CheckersPiece implements Piece {
 	public void setVisual(Image vis) {
 		this.visual = vis;
 	}
+	
 
 }

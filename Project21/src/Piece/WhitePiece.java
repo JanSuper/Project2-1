@@ -10,7 +10,7 @@ public class WhitePiece extends CheckersPiece{
 	
 	@Override
 	public WhitePiece clone() {
-		return this;
+		return new WhitePiece();
 	}
 	
 	@Override
