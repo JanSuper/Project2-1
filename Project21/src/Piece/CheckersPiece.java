@@ -4,8 +4,6 @@ import java.awt.Image;
 
 abstract public class CheckersPiece implements Piece {
 	
-	int getal;
-	
 	private Image visual;
 	
 	public CheckersPiece() {
