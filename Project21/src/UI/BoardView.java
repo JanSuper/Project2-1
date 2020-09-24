@@ -5,12 +5,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+
 public class BoardView extends VBox
 {
     private Canvas canvas;
     private final double WIDTH = 400;
     private final double HEIGHT = 400;
-
+    
     public BoardView()
     {
         this.canvas = new Canvas(WIDTH,HEIGHT);
