@@ -1,8 +1,6 @@
-package Player;
-
 public interface Player{
 	
-	CkeckerPlayer clone()
+	public CheckersPlayer clone();
 
 
 }

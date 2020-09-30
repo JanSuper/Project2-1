@@ -1,4 +1,3 @@
-package Player;
 public class BotPlayer extends CheckersPlayer{
 	
 
@@ -8,8 +7,9 @@ public class BotPlayer extends CheckersPlayer{
 
 
 
-	public BotPlayer clone(){
-	return new BotPlayer
+	public CheckersPlayer clone(){
+
+		return new BotPlayer();
 	}
 
 
