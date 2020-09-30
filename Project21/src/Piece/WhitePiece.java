@@ -18,5 +18,8 @@ public class WhitePiece extends CheckersPiece{
 		return super.getVisual();
 	}
 	
+	public void isKing() {
+		//this.setVisual(databasePointerKing);
+	}
 
 }

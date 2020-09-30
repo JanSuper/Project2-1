@@ -22,5 +22,4 @@ abstract public class CheckersPiece implements Piece {
 		this.visual = vis;
 	}
 	
-
 }
