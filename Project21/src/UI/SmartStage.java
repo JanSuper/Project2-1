@@ -1,3 +1,5 @@
+package UI;
+
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 

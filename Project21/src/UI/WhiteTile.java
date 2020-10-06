@@ -1,3 +1,5 @@
+package UI;
+
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
@@ -18,7 +20,7 @@ public class WhiteTile extends Box
         translateYProperty().set(this.getTranslateY()+50);
 
         PhongMaterial material = new PhongMaterial();
-        material.setDiffuseMap(new Image(String.valueOf(getClass().getResource("/images/white tile.jpg"))));
+        material.setDiffuseMap(new Image(String.valueOf(getClass().getResource("/UI/images/white tile.jpg"))));
         setMaterial(material);
     }
 }

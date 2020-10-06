@@ -1,3 +1,5 @@
+package UI;
+
 
 public class Board extends SmartGroup
 {

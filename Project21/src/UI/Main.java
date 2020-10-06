@@ -1,3 +1,5 @@
+package UI;
+
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.stage.Stage;
