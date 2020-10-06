@@ -1,35 +1,28 @@
-package UI;
-
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.*;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    Board board = new Board();
+    SmartStage stage = new SmartStage(board);
 
-    Scene scene;
-    Board board;
-    BoardView bv;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 800;
 
     @Override
-    public void start(Stage stage) throws Exception
-    {
-        bv = new BoardView();
-        scene = new Scene(bv);
+    public void start(Stage primaryStage) throws Exception{
 
+        Camera camera = new PerspectiveCamera();
+        Scene scene = new Scene(board, WIDTH, HEIGHT, true);
+        scene.setCamera(camera);
 
-        stage.setScene(scene);
         stage.setTitle("title");
+        stage.setScene(scene);
         stage.show();
-
-        board = new Board();
-        bv.draw(board.getBoard());
-        
     }
 
-
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         launch(args);
     }
+
 }
