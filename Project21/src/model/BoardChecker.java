@@ -17,7 +17,7 @@ public interface BoardChecker {
 	
 	int getOpponent(int player);
 	void validPlayer(int player);
-	int getCurrentPlayer(int player);
+	int getCurrentPlayer();
 	boolean isTurnOf(int player);
 	boolean isWinner(int player);
 	

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import java.util.Set;
 
 public class Game extends JFrame {
 	
@@ -78,20 +79,28 @@ public class Game extends JFrame {
             }
         }
         
-//        public void mouseReleased (MouseEvent e) {
-//            if (awaitingRelease) {
-//                Set<Move> legal = board.getBoard().getCurrentPlayerMoves();
-//                Move mouseMove = new Move(board.getBoard(), rowStart, colStart,
-//                board.getRow (e.getY()), 
-//                board.getCol (e.getX()));
-//                
-//                if (legal.contains(mouseMove)) {
-//                    makeMove(mouseMove);
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Illegal move");
-//                }
-//            } 
-//        }
+        public void mouseReleased (MouseEvent e) {
+            if (awaitingRelease) {
+                Set<Move> legal = board.getBoard().getCurrentPlayerMoves();
+                Move mouseMove = new Move(board.getBoard(), rowStart, colStart,
+                board.getRow (e.getY()), 
+                board.getCol (e.getX()));
+                
+                if (legal.contains(mouseMove)) {
+                    makeMove(mouseMove);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Illegal move");
+                }
+            } 
+        }
+    }
+	
+	private void makeMove(Move m) {
+        if (m != null && !board.getBoard().gameOver()) {
+            board.getBoard().move(m);
+            board.repaint();
+            changeTurn();
+        }
     }
 	
 	public static void main(String[] args) {

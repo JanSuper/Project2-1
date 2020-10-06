@@ -2,6 +2,7 @@ package model;
 
 import java.util.Set;
 
+
 public class Board implements BoardChecker {
 	
 	public final static int BLACK = 1;
@@ -93,7 +94,7 @@ public class Board implements BoardChecker {
 	}
 
 	@Override
-	public int getCurrentPlayer(int player) {
+	public int getCurrentPlayer() {
 		return currentPlayer;
 	}
 
@@ -205,7 +206,50 @@ public class Board implements BoardChecker {
 
 	@Override
 	public Set<Move> getLegalMoves(int player) {
-		return null;
+		 validPlayer(player);
+//       Set<Move> captureMoves = allCaptureMoves (player);
+//       if (captureMoves.size() > 0) {return captureMoves;}
+//       return allRegularMoves (player);
+		 return null;
 	}
 
+	public void move (Move move) {
+        int start = getIndex (move.getSourceRow(), move.getSourceCol());
+        int end = getIndex (move.getDestinationRow(), move.getDestinationCol());
+        board[end] = board[start];
+        board[start] = empty;
+        if (!kingAt (move.getDestinationRow(), move.getDestinationCol()) &&
+	    toBeKing (move.getDestinationRow(), move.getDestinationCol())) {
+            makeKing (move.getDestinationRow(), move.getDestinationCol());
+        }
+        boolean changeTurn = !move.isCapture();
+//        
+//        if (!changeTurn) {
+//            int captureRow = getCaptureRow (move);
+//            int captureCol = getCaptureCol (move);
+//            board[getIndex (captureRow, captureCol)] = empty;
+//            
+//            if (pieceCanStillCapture (move.getDestinationRow(), move.getDestinationCol())) {
+//                repeatingRow = move.getDestinationRow();
+//                repeatingCol = move.getDestinationCol();
+//                turnRepeating = true;
+//                
+//            } else {
+//                changeTurn = true;
+//            }
+//            
+//        } 
+//        
+//        if (changeTurn) {
+//            currentPlayer = (currentPlayer == BLACK) ? RED : BLACK;
+//            turnRepeating = false;
+//        }
+//        
+//        moveSequence.add(move);
+    }
+	
+	public Set<Move> getCurrentPlayerMoves () {
+        return getLegalMoves (getCurrentPlayer());
+    }
+	
 }
