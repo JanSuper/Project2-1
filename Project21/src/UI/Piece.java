@@ -14,11 +14,7 @@ public class Piece extends Cylinder
     public Piece()
     {
         super(RADIUS, HEIGHT);
-        translateXProperty().set(150);
-        translateYProperty().set(50);
-        translateZProperty().set(this.getTranslateZ()-20);
         rotate_in_right_position();
-        addEvents();
     }
 
     private void rotate_in_right_position()
@@ -31,34 +27,7 @@ public class Piece extends Cylinder
 
     }
 /**********************************************************************************************************************/
-    private void addEvents()
-    {
-        this.setOnMousePressed((t) -> {
-                    moveSceneX = t.getSceneX();
-                    moveSceneY = t.getSceneY();
 
-                    this.toFront();
-                }
-        );
-
-        this.setOnMouseDragged((t) ->
-        {
-            double offsetX = t.getSceneX() - moveSceneX;
-            double offsetY = t.getSceneY() - moveSceneY;
-
-
-            this.setTranslateX(this.getTranslateX() + offsetX);
-            this.setTranslateY(this.getTranslateY() + offsetY);
-
-            moveSceneX = t.getSceneX();
-            moveSceneY = t.getSceneY();
-        });
-
-        this.setOnMouseClicked(t ->{
-            this.setTranslateX((int) (this.getTranslateX()/100)*100 + 50);
-            this.setTranslateY((int) (this.getTranslateY()/100)*100 + 50);
-        });
-    }
 /***********************************************************************************************************************/
 
     private int get_xCoordinate()
