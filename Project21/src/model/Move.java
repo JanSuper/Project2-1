@@ -3,12 +3,18 @@ package model;
 public class Move {
 
 	private int srcRow, srcCol, desRow, desCol;
+	private int srPos, scPos, erPos;
 
 	public Move(Board c, int sRow, int sCol, int eRow, int eCol) {
 		srcRow = sRow;
 		srcCol = sCol;
 		desRow = eRow;
 		desCol = eCol;
+		
+		int base = Math.max(c.numRows(), c.numCols());
+		erPos = base;
+		scPos = erPos * base;
+		srPos = scPos * base;
 	}
 
 	public int getSourceRow() {
@@ -42,5 +48,9 @@ public class Move {
 
 	public boolean isCapture() {
 		return (Math.abs(desRow - srcRow) == 2) && (Math.abs(desCol - srcCol) == 2);
+	}
+	
+	public int hashCode() {
+		return srcRow * srPos + srcCol * scPos + desRow * erPos + desCol;
 	}
 }

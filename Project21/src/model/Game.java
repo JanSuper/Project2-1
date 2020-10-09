@@ -86,8 +86,14 @@ public class Game extends JFrame {
                 board.getRow (e.getY()), 
                 board.getCol (e.getX()));
                 
+                System.out.println("Mouse: " + mouseMove);
+                
+                for (Move move : legal) {
+					System.out.println(move);
+				}
+                
                 if (legal.contains(mouseMove)) {
-                    makeMove(mouseMove);
+                	makeMove(mouseMove);
                 } else {
                     JOptionPane.showMessageDialog(null, "Illegal move");
                 }

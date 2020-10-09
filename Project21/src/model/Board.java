@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 
@@ -15,6 +17,9 @@ public class Board implements BoardChecker {
     private final int numBlacks = 12;
     private int board[]; // retrieve by index [0...31]
     
+    private boolean turnRepeating;
+    private int repeatingRow;
+    private int repeatingCol;
     private int currentPlayer;
 
     public Board() {
@@ -47,7 +52,17 @@ public class Board implements BoardChecker {
 
 	@Override
 	public Board copyGame() {
-		return null;
+		Board dup = new Board();
+        for (int i = 0; i < numSquares; ++i) {
+            dup.board[i] = board[i];
+        }
+        dup.currentPlayer = currentPlayer;
+        dup.repeatingRow = repeatingRow;
+        dup.repeatingCol = repeatingCol;
+        dup.turnRepeating = turnRepeating;
+//        dup.moveSequence = new ArrayList<Move>();
+//        for (Move m: moveSequence) {dup.moveSequence.add(m);}
+        return dup;
 	}
 
 	@Override
@@ -207,11 +222,61 @@ public class Board implements BoardChecker {
 	@Override
 	public Set<Move> getLegalMoves(int player) {
 		 validPlayer(player);
-//       Set<Move> captureMoves = allCaptureMoves (player);
-//       if (captureMoves.size() > 0) {return captureMoves;}
-//       return allRegularMoves (player);
-		 return null;
+       Set<Move> captureMoves = allCaptureMoves (player);
+       if (captureMoves.size() > 0) {return captureMoves;}
+       return allRegularMoves (player);
 	}
+	
+	public Set<Move> allCaptureMoves (int player) {
+        Set<Move> captureMoves = new LinkedHashSet<Move>();
+        if (turnRepeating) {
+            addCaptureMoves (captureMoves, repeatingRow, repeatingCol);
+            
+        } else {
+            for (int i = 0; i < numSquares; ++i) {
+                int row = getRow(i);
+                int col = getCol(i);
+                if (pieceAt (row, col, player)) {
+                    addCaptureMoves (captureMoves, row, col);
+                }
+            }
+        }
+        
+        return captureMoves;
+    }
+	
+	public Set<Move> allRegularMoves (int player) {
+		Set<Move> regularMoves = new LinkedHashSet<Move>();
+		if (!turnRepeating) {
+			for (int i = 0; i < numSquares; ++i) {
+				int row = getRow(i);
+				int col = getCol(i);
+				if (pieceAt(row, col, player)) {
+					addRegularMoves(regularMoves, row, col);
+				}
+			}
+		}
+        return regularMoves;
+    }
+	
+	private void addRegularMoves (Set<Move> regularMoves, int row, int col) {
+        Set<Move> candidates = getCandidateRegularMoves (row, col);
+        for (Move m: candidates) {
+            if (legal (m.getDestinationRow(), m.getDestinationCol()) &&
+            noPieceAt (m.getDestinationRow(), m.getDestinationCol())) {
+                regularMoves.add (m);
+            }
+        }
+    }
+	
+	private Set<Move> getCandidateRegularMoves (int row, int col) {
+        Move upLeft = new Move (this, row, col, row - 1, col - 1);
+        Move upRight = new Move (this, row, col, row - 1, col + 1);
+        Move downLeft = new Move (this, row, col, row + 1, col - 1);
+        Move downRight = new Move (this, row, col, row + 1, col + 1);
+        return getCandidateMoves (row, col, upLeft, upRight, 
+        downLeft, downRight);
+    }
 
 	public void move (Move move) {
         int start = getIndex (move.getSourceRow(), move.getSourceCol());
@@ -223,31 +288,96 @@ public class Board implements BoardChecker {
             makeKing (move.getDestinationRow(), move.getDestinationCol());
         }
         boolean changeTurn = !move.isCapture();
-//        
-//        if (!changeTurn) {
-//            int captureRow = getCaptureRow (move);
-//            int captureCol = getCaptureCol (move);
-//            board[getIndex (captureRow, captureCol)] = empty;
-//            
-//            if (pieceCanStillCapture (move.getDestinationRow(), move.getDestinationCol())) {
-//                repeatingRow = move.getDestinationRow();
-//                repeatingCol = move.getDestinationCol();
-//                turnRepeating = true;
-//                
-//            } else {
-//                changeTurn = true;
-//            }
-//            
-//        } 
-//        
-//        if (changeTurn) {
-//            currentPlayer = (currentPlayer == BLACK) ? RED : BLACK;
-//            turnRepeating = false;
-//        }
+        
+        if (!changeTurn) {
+            int captureRow = getCaptureRow (move);
+            int captureCol = getCaptureCol (move);
+            board[getIndex (captureRow, captureCol)] = empty;
+            
+            if (pieceCanStillCapture (move.getDestinationRow(), move.getDestinationCol())) {
+                repeatingRow = move.getDestinationRow();
+                repeatingCol = move.getDestinationCol();
+                turnRepeating = true;
+                
+            } else {
+                changeTurn = true;
+            }
+            
+        } 
+        
+        if (changeTurn) {
+            currentPlayer = (currentPlayer == BLACK) ? WHITE : BLACK;
+            turnRepeating = false;
+        }
 //        
 //        moveSequence.add(move);
     }
 	
+	private int getCaptureRow (Move move) {
+        return (move.getSourceRow() + move.getDestinationRow()) / 2;
+    }
+    
+    private int getCaptureCol (Move move) {
+        return (move.getSourceCol() + move.getDestinationCol()) / 2;
+    }
+	
+    public boolean pieceCanStillCapture (int row, int col) {
+        if (!pieceAt (row, col, getCurrentPlayer())) {return false;}
+        Set<Move> captureMoves = new LinkedHashSet<Move>();
+        addCaptureMoves (captureMoves, row, col);
+        return (captureMoves.size() > 0);
+    }
+    
+    private void addCaptureMoves (Set<Move> captureMoves, int row, int col) {
+        Set<Move> candidates = getCandidateCaptures (row, col);
+        for (Move m: candidates) {
+            int captureRow = getCaptureRow (m);
+            int captureCol = getCaptureCol (m);
+            if (legal (m.getDestinationRow(), m.getDestinationCol()) &&
+                noPieceAt (m.getDestinationRow(), m.getDestinationCol()) &&
+            ((blackPieceAt (m.getSourceRow(), m.getSourceCol()) &&
+            whitePieceAt (captureRow, captureCol)) ||
+            (whitePieceAt (m.getDestinationRow(), m.getDestinationCol()) &&
+            blackPieceAt (captureRow, captureCol)))) {
+                captureMoves.add (m);
+            }		
+        }
+    }
+    
+    private Set<Move> getCandidateCaptures (int row, int col) {
+        Move upLeft = new Move (this, row, col, row - 2, col - 2);
+        Move upRight = new Move (this, row, col, row - 2, col + 2);
+        Move downLeft = new Move (this, row, col, row + 2, col - 2);
+        Move downRight = new Move (this, row, col, row + 2, col + 2);
+        return getCandidateMoves (row, col, upLeft, upRight, 
+        downLeft, downRight);
+    }
+    
+    private Set<Move> getCandidateMoves (int row, int col, Move upLeft,
+    	    Move upRight, Move downLeft,
+    	    Move downRight) {
+    	        Set<Move> moves = new LinkedHashSet<Move>();
+    	        if (kingAt (row, col)) {
+    	            moves.add (downRight);
+    	            moves.add (downLeft);
+    	            moves.add (upLeft);
+    	            moves.add (upRight);
+    	            
+    	        } else if (blackPieceAt (row, col)) {
+    	            moves.add (downRight);
+    	            moves.add (downLeft);
+    	            
+    	        } else if (whitePieceAt (row, col)) {
+    	            moves.add (upRight);
+    	            moves.add (upLeft);
+    	            
+    	        } else {
+    	            System.out.println ("Player does not exist at row: " + row 
+    	            + " col: " + col);
+    	        }
+    	        return moves;
+    	    }
+    
 	public Set<Move> getCurrentPlayerMoves () {
         return getLegalMoves (getCurrentPlayer());
     }
