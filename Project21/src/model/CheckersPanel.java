@@ -50,7 +50,7 @@ public class CheckersPanel extends JPanel {
 		    }
 		    g.fillOval (col * squareWidth, row * squareHeight, 
 				squareWidth, squareHeight);
-		    g.setColor (Color.white);
+		    g.setColor (Color.red);
 		    g.drawOval (col * squareWidth, row * squareHeight, 
 				squareWidth - 1, squareHeight - 1);
 		    if (board.kingAt (row, col)) {
