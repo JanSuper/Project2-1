@@ -21,7 +21,7 @@ public interface BoardChecker {
 	boolean isTurnOf(int player);
 	boolean isWinner(int player);
 	
-	boolean legal(int row, int col);
+	boolean isLegalMove(int row, int col);
 	boolean isBlackSquare(int row, int col); // pieces are only at black square
 	boolean isWhiteSquare(int row, int col);
 	boolean blackPieceAt(int row, int col);

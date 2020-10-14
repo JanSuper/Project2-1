@@ -127,7 +127,7 @@ public class Board implements BoardChecker {
 	}
 
 	@Override
-	public boolean legal(int row, int col) {
+	public boolean isLegalMove(int row, int col) {
 		return (row >= minRow() && row <= maxRow() && 
 				col >= minCol() && col <= maxCol());
 	}
@@ -196,7 +196,7 @@ public class Board implements BoardChecker {
 	@Override
 	public boolean toBeKing(int row, int col) {
 		return (row == maxRow() && blackPieceAt (row, col)) || 
-			    (row == minRow() && whitePieceAt (row, col)) && legal (row, col);
+			    (row == minRow() && whitePieceAt (row, col)) && isLegalMove (row, col);
 	}
 
 	@Override
@@ -223,7 +223,9 @@ public class Board implements BoardChecker {
 	public Set<Move> getLegalMoves(int player) {
 		 validPlayer(player);
        Set<Move> captureMoves = allCaptureMoves (player);
-       if (captureMoves.size() > 0) {return captureMoves;}
+       if (captureMoves.size() > 0) {
+    	   return captureMoves;
+       }
        return allRegularMoves (player);
 	}
 	
@@ -262,7 +264,7 @@ public class Board implements BoardChecker {
 	private void addRegularMoves (Set<Move> regularMoves, int row, int col) {
         Set<Move> candidates = getCandidateRegularMoves (row, col);
         for (Move m: candidates) {
-            if (legal (m.getDestinationRow(), m.getDestinationCol()) &&
+            if (isLegalMove (m.getDestinationRow(), m.getDestinationCol()) &&
             noPieceAt (m.getDestinationRow(), m.getDestinationCol())) {
                 regularMoves.add (m);
             }
@@ -331,17 +333,21 @@ public class Board implements BoardChecker {
     private void addCaptureMoves (Set<Move> captureMoves, int row, int col) {
         Set<Move> candidates = getCandidateCaptures (row, col);
         for (Move m: candidates) {
-            int captureRow = getCaptureRow (m);
-            int captureCol = getCaptureCol (m);
-            if (legal (m.getDestinationRow(), m.getDestinationCol()) &&
-                noPieceAt (m.getDestinationRow(), m.getDestinationCol()) &&
-            ((blackPieceAt (m.getSourceRow(), m.getSourceCol()) &&
-            whitePieceAt (captureRow, captureCol)) ||
-            (whitePieceAt (m.getDestinationRow(), m.getDestinationCol()) &&
-            blackPieceAt (captureRow, captureCol)))) {
+            if (canCapture(m)) {
                 captureMoves.add (m);
             }		
         }
+    }
+    
+    private boolean canCapture(Move m) {
+    	int captureRow = getCaptureRow (m);
+        int captureCol = getCaptureCol (m);
+        return isLegalMove (m.getDestinationRow(), m.getDestinationCol()) &&
+        		noPieceAt (m.getDestinationRow(), m.getDestinationCol()) &&
+        		((blackPieceAt (m.getSourceRow(), m.getSourceCol()) &&
+        					whitePieceAt (captureRow, captureCol)) ||
+        		(whitePieceAt (m.getSourceRow(), m.getSourceCol()) &&
+        					blackPieceAt (captureRow, captureCol)));
     }
     
     private Set<Move> getCandidateCaptures (int row, int col) {
