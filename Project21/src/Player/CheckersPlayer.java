@@ -1,6 +1,8 @@
-package Player;
-
 abstract public class CheckersPlayer implements Player{
+
+
+    public float score;
+
 
 
 	public CheckersPlayer(){
@@ -13,6 +15,6 @@ abstract public class CheckersPlayer implements Player{
 	}
 
 
-
+    public abstract boolean isHuman();
 
 }
