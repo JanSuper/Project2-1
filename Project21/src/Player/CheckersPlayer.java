@@ -1,3 +1,5 @@
+package Player;
+
 abstract public class CheckersPlayer implements Player{
 
 

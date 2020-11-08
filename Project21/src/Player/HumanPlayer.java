@@ -1,3 +1,5 @@
+package Player;
+
 public class HumanPlayer extends CheckersPlayer{
 
 
