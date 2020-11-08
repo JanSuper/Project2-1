@@ -1,4 +1,3 @@
-package Player;
 
 public class HumanPlayer extends CheckersPlayer{
 
@@ -10,7 +9,8 @@ public class HumanPlayer extends CheckersPlayer{
 	}
 
 	public HumanPlayer(String name){
-		playerName=name;
+
+	    playerName=name;
 	}
 
 
@@ -28,6 +28,16 @@ public class HumanPlayer extends CheckersPlayer{
 
 	public void setName(String name){
 		this.playerName=name;
+	}
+
+
+    @Override
+    public boolean isHuman() {
+        return true;
+    }
+
+    public float getScore(){
+		return score;
 	}
 
 

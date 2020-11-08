@@ -1,11 +1,16 @@
-package Player;
 
 public class BotPlayer extends CheckersPlayer{
-	
+
+    public String botName;
+
 
 	public BotPlayer(){
 
 	}
+
+	public BotPlayer(String name){
+	    this.botName=name;
+    }
 
 
 
@@ -14,5 +19,20 @@ public class BotPlayer extends CheckersPlayer{
 		return new BotPlayer();
 	}
 
+
+
+    @Override
+    public boolean isHuman() {
+        return false;
+    }
+
+
+    public String getBotName(){
+		return botName;
+	}
+
+	public float getScore(){
+		return score;
+	}
 
 }
